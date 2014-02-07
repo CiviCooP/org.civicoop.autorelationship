@@ -30,3 +30,10 @@ Requirements
 -----------
 
 requires *CiviCRM*
+
+Future wishes & Todo
+--------------------
+
+For the future it would be handy if this extension becomes more flexibel, in that way that you can configure relationship type with an automatic flag, so one can have more automatic relationships
+
+Also see the [ToDo](TODO.md)
