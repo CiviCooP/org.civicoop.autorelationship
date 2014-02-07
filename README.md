@@ -3,7 +3,7 @@ Automatic relationships based on Dutch Postalcodes
 
 This extension creates automatically relationships between Contacts in CiviCRM based on postal codes. This comes in handy when you have split up your organisation into local departmants, were every departmant is responible for its own region (postal code region)
 
-> *Note:* The Dutch postal code system doesn't always make sense when it comes to geographical regions although it is used for this purpose in quite a few organisations.
+> **Note:** The Dutch postal code system doesn't always make sense when it comes to geographical regions although it is used for this purpose in quite a few organisations.
 
 Installation instructions
 -------------------------
@@ -19,11 +19,12 @@ Usage instructions
 2. Select an another contact and fill in a postal code and select country Netherlands. 
 3. The contact and target have now a relationship with each other
 
+> **Note:** only primary addresses are used for matching relationships.
 
 Technical description
 ---------------------
 
-On the **target** contact (e.g. **the local departmant**) custom fields are available to define the postal code ranges for which the **target** is repsonsible (e.g. 3771 GF - 3771 KL, 3773 ZA - 3773 ZC)
+The matching is done through a **Matcher** class. This extension has a abstract class for this matcher and has implemented an example of the matcher. Purpose of the matcher is to return target contact ids. In this case the matcher will match based on the postal code of the address and based on the range of postal codes of the target. 
 
 Requirements
 -----------
