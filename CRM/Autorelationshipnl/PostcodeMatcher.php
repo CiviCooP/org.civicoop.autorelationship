@@ -21,6 +21,11 @@ class CRM_Autorelationshipnl_PostcodeMatcher extends CRM_Autorelationshipnl_Matc
       return array(); //do not match if the country of the address is outside Netherlands
     }
     
+    //do not match when address is not a primary address
+    if ($objAddress->is_primary != '1') {
+      return array();
+    }
+    
     $group_id = $this->getCustomGroupIdByName('Postcodes');
     $table = $this->getCustomGroupTableById($group_id);
     $van_postcode_num = $this->getCustomFieldColumnByNameAndGroup('Van_postcode_cijfers_', $group_id);
