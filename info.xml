@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <extension key="org.civicoop.autorelationshipnl" type="module">
   <file>autorelationshipnl</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
+  <name>Automatic relationships</name>
+  <description>Automatic relationships based on a Dutch postal code</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Jaap Jansma</author>

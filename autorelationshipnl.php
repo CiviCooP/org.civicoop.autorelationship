@@ -106,3 +106,16 @@ function autorelationshipnl_civicrm_caseTypes(&$caseTypes) {
 function autorelationshipnl_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
   _autorelationshipnl_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
+
+/**
+ * Implementation of hook_civicrm_post
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_post
+ */
+function autorelationshipnl_civicrm_post( $op, $objectName, $objectId, &$objectRef ) {
+  if ($objectName == 'Address' && $objectRef instanceof CRM_Core_DAO_Address) {
+    
+    $matcher = new CRM_Autorelationshipnl_PostcodeMatcher();
+    $creator = new CRM_Autorelationshipnl_Creator('Lid op basis van postcode', $matcher);
+    $creator->matchAndCreate($objectRef);
+  }
+}
