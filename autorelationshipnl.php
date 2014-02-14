@@ -113,9 +113,23 @@ function autorelationshipnl_civicrm_alterSettingsFolders(&$metaDataFolders = NUL
  */
 function autorelationshipnl_civicrm_post( $op, $objectName, $objectId, &$objectRef ) {
   if ($objectName == 'Address' && $objectRef instanceof CRM_Core_DAO_Address) {
-    
-    $matcher = new CRM_Autorelationshipnl_PostcodeMatcher();
+    $matcher = new CRM_Autorelationshipnl_CityMatcher();
     $creator = new CRM_Autorelationshipnl_Creator('Lid op basis van postcode', $matcher);
     $creator->matchAndCreate($objectRef);
   }
+}
+
+/**
+ * Implementatio of hook__civicrm_tabs
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_tabs
+ */
+
+function autorelationshipnl_civicrm_tabs( &$tabs, $contactID ) { 
+    // add a tab with the linked cities
+    $url = CRM_Utils_System::url( 'civicrm/contact/tab/autorelationship_contact_city',
+                                  "cid=$contactID&snippet=1" );
+    $tabs[] = array( 'id'    => 'contact_cities',
+                     'url'   => $url,
+                     'title' => ts('Cities'),
+                     'weight' => 300 );
 }

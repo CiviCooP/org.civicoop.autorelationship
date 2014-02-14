@@ -16,4 +16,14 @@ abstract class CRM_Autorelationshipnl_Matcher {
    */
   abstract public function findTargetContactIds($objAddress);
   
+  /**
+   * Returns an array with the contact IDs which should have a relationship to the contact owner of the address
+   * 
+   * This is the inverse action of the function findTargetContactIds
+   * 
+   * @param object $objContact
+   * @return array
+   */
+  //abstract public function findSourceContactIds($objContact);
+  
 }
