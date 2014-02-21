@@ -26,13 +26,11 @@ Technical description
 
 The matching is done through a **Matcher** class. This extension has a abstract class for this matcher and has implemented an example of the matcher. Purpose of the matcher is to return target contact ids. In this case the matcher will match based on the postal code of the address and based on the range of postal codes of the target. 
 
-Requirements
------------
+### Requirements
 
 requires *CiviCRM*
 
-Hooks
------
+### Hooks
 
 If you want to build your own matcher/target rules you have to implement the following hook
 
