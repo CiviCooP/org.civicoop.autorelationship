@@ -37,6 +37,9 @@ class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
       case 'delete':
         $this->deleteAction();
         break;
+      case 'add':
+        $this->addAction();
+        break;
     }
 
     parent::run();
@@ -54,6 +57,7 @@ class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
 
     $entities = $factory->getEntityList($this->_contactId);
     $this->assign('entities', $entities);
+    $this->assign('interfaces', $factory->getTargetInterfaces());
   }
 
   /**
@@ -71,6 +75,17 @@ class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
     $session->setStatus(ts("Automatic relationship rule removed."), ts("Delete"), 'success');
     
     $this->redirectToTab();
+  }
+  
+  protected function addAction() {
+    $factory = CRM_Autorelationship_TargetFactory::singleton();
+    $interface = $factory->getInterfaceForEntity($this->_entity_type);
+    $url = $interface->getAddFormUrl();
+    $q = 'cid='.$this->_contactId;
+    $q .= '&entity='.$this->_entity_type;
+    
+    $redirectUrl = CRM_Utils_System::url($url, $q, TRUE);
+    CRM_Utils_System::redirect($redirectUrl);
   }
   
   protected function redirectToTab() {
@@ -97,6 +112,9 @@ class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
       $this->_action = 'delete';
       $this->_entity_type = CRM_Utils_Request::retrieve('entity', 'String', $this, TRUE);
       $this->_entity_id = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this, TRUE);
+    } elseif (isset($action) && $action == CRM_Core_Action::ADD) {
+      $this->_action = 'add';
+      $this->_entity_type = CRM_Utils_Request::retrieve('entity', 'String', $this, TRUE);
     }
   }
 

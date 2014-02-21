@@ -26,7 +26,7 @@ class CRM_Autorelationship_TargetFactory {
    * class constructor
    */
   private function __construct() {
-    $this->interfaces = $this->getTargetInterfaces();
+    $this->interfaces = $this->loadTargetInterfaces();
   }
   
   /**
@@ -106,7 +106,7 @@ class CRM_Autorelationship_TargetFactory {
   /**
    * returns an array with the target interfaces
    */
-  protected function getTargetInterfaces() {
+  protected function loadTargetInterfaces() {
     $interfaces = array();
     $hooks = CRM_Utils_Hook::singleton();
     $hooks->invoke(1,
@@ -123,7 +123,7 @@ class CRM_Autorelationship_TargetFactory {
    * @return CRM_Autorelationship_TargetInterface
    * @throws CRM_Core_Exception
    */
-  protected function getInterfaceForEntity($entity) {
+  public function getInterfaceForEntity($entity) {
     foreach($this->interfaces as $interface) {
       if ($interface->getEntitySystemName() == $entity) {
         return $interface;
@@ -131,5 +131,14 @@ class CRM_Autorelationship_TargetFactory {
     }
     
     throw new CRM_Core_Exception('No valid entity type found');
+  }
+  
+  /**
+   * Return an array of all interfaces
+   * 
+   * @return array
+   */
+  public function getTargetInterfaces() {
+    return $this->interfaces;
   }
 }

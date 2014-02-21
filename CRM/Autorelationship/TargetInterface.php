@@ -58,4 +58,11 @@ abstract class CRM_Autorelationship_TargetInterface {
    */
   public abstract function getMatcher();
   
+  /**
+   * returns the url to the page for adding a new target rule for the contact
+   * 
+   * @return String
+   */
+  public abstract function getAddFormUrl();
+  
 }

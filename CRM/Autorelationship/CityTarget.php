@@ -49,5 +49,9 @@ class CRM_Autorelationship_CityTarget extends CRM_Autorelationship_TargetInterfa
       ));
   }
   
+  public function getAddFormUrl() {
+    return 'civicrm/autorelationship/addrule/city';
+  }
+  
 }
 

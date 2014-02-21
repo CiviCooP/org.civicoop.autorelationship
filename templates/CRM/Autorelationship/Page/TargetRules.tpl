@@ -1,4 +1,14 @@
-<h3>{ts}Automatic relationships{/ts}</h3>
+<h4>{ts}Automatic relationships{/ts}</h4>
+
+{if (count($interfaces) > 0)}
+        
+        <select name="addTargetRule" onchange="addTargetRule(this);">
+            <option>-- {ts}New automatic relationship rule{/ts} --</option>
+            {foreach from=$interfaces item=interface}
+                <option value="{$interface->getEntitySystemName()}">{$interface->getEntityHumanName()}</option>
+            {/foreach}
+        </select>
+{/if}
 
 {if (count($entities) > 0)}
 
@@ -22,3 +32,20 @@
         {/foreach}
     </table>
 {/if}
+
+{literal}
+<script type="text/javascript">
+
+function addTargetRule(select) {
+    var entity = select.options[select.selectedIndex].value;
+    if (typeof entity != 'undefined' && entity) {
+        window.location = CRM.url('civicrm/contact/tab/autorelationship_targetrules', {
+            'cid': '{/literal}{$contactId}{literal}',
+            'entity': entity,
+            'action': 'add'
+        });
+    }
+    
+}
+</script>
+{/literal}

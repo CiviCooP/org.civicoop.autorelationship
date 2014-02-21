@@ -6,4 +6,10 @@
     <title>Contact automatic relationship</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/autorelationship/addrule/city</path>
+    <page_callback>CRM_Autorelationship_Form_AddCityTargetRule</page_callback>
+    <title>Add city for automatic relationship</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
