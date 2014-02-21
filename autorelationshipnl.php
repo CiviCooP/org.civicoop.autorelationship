@@ -126,10 +126,19 @@ function autorelationshipnl_civicrm_post( $op, $objectName, $objectId, &$objectR
 
 function autorelationshipnl_civicrm_tabs( &$tabs, $contactID ) { 
     // add a tab with the linked cities
-    $url = CRM_Utils_System::url( 'civicrm/contact/tab/autorelationship_contact_city',
+    $url = CRM_Utils_System::url( 'civicrm/contact/tab/autorelationship_targetrules',
                                   "cid=$contactID&snippet=1" );
-    $tabs[] = array( 'id'    => 'contact_cities',
+    $tabs[] = array( 'id'    => 'autorelationship_targetrules',
                      'url'   => $url,
-                     'title' => ts('Cities'),
+                     'title' => ts('Automatic relationships'),
                      'weight' => 300 );
+}
+
+/**
+ * Implementation of hook__civicrm_autorelationshipnl_targetinterfaces
+ * 
+ * @param array $interfaces
+ */
+function autorelationshipnl_civicrm_autorelationshipnl_targetinterfaces(&$interfaces) {
+  $interfaces[] = new CRM_Autorelationshipnl_CityTarget();
 }
