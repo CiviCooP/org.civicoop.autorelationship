@@ -31,6 +31,13 @@ Requirements
 
 requires *CiviCRM*
 
+Hooks
+-----
+
+If you want to build your own matcher/target rules you have to implement the following hook
+
+- **hook_autorelationship_targetinterfaces** this hook has one parameter which is the list of *TargetInterfaces*. You should return in the array the instance of your target interface which extends from *CRM_Autorelationshipnl_TargetInterface*
+
 Future wishes & Todo
 --------------------
 
