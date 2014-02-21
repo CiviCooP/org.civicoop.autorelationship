@@ -10,9 +10,9 @@ class CRM_Autorelationship_Upgrader extends CRM_Autorelationship_Upgrader_Base {
 
   /**
    * Example: Run an external SQL script when the module is installed
-   *
+   */
   public function install() {
-    $this->executeSqlFile('sql/myinstall.sql');
+    $this->executeSqlFile('sql/install.sql');
   }
 
   /**
@@ -42,11 +42,11 @@ class CRM_Autorelationship_Upgrader extends CRM_Autorelationship_Upgrader_Base {
    * @return TRUE on success
    * @throws Exception
    */
-  public function upgrade_1001() {
+  /*public function upgrade_1001() {
     $this->ctx->log->info('Applying update 1001');
-    $this->executeSqlFile('sql/upgrade_1001.sql');
+    $this->executeSqlFile('sql/install.sql');
     return TRUE;
-  }
+  }*/
 
 
   /**
