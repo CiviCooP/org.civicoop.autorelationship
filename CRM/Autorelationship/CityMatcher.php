@@ -10,6 +10,10 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
     
   }
   
+  public function getRelationshipType() {
+    return 'city_based';
+  }
+  
   /**
    * Returns an array with the contact IDs which should have a relationship to the contact owner of the address
    * 

@@ -128,8 +128,14 @@ function autorelationship_civicrm_tabs( &$tabs, $contactID ) {
     // add a tab with the linked cities
     $url = CRM_Utils_System::url( 'civicrm/contact/tab/autorelationship_targetrules',
                                   "cid=$contactID&snippet=1" );
+    
+    //Count rules
+    $factory = CRM_Autorelationship_TargetFactory::singleton();
+    $count = $factory->getEntityListCount($contactID);
+    
     $tabs[] = array( 'id'    => 'autorelationship_targetrules',
                      'url'   => $url,
+                     'count' => $count,
                      'title' => ts('Automatic relationships'),
                      'weight' => 300 );
 }

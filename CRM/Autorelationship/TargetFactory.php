@@ -76,6 +76,22 @@ class CRM_Autorelationship_TargetFactory {
   }
   
   /**
+   * Returns the number of automatic relationship rules
+   * 
+   * @param int $targetContactId
+   * @return int
+   */
+  public function getEntityListCount($targetContactId) {
+    $return = 0;
+    foreach($this->interfaces as $interface) {
+      $entities = $interface->listEntitiesForTarget($targetContactId);
+      $return = $return + count($entities);
+    }
+    
+    return $return;
+  }
+  
+  /**
    * Deletes a specific target entity rule
    * 
    * @param String $entity
@@ -95,7 +111,7 @@ class CRM_Autorelationship_TargetFactory {
     $hooks = CRM_Utils_Hook::singleton();
     $hooks->invoke(1,
       $interfaces, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject,
-      'autorelationshipnl_autorelationship_targetinterfaces'
+      'autorelationship_targetinterfaces'
       );
     return $interfaces;
   }
