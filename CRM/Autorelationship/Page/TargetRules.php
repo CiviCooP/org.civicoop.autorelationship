@@ -2,7 +2,7 @@
 
 require_once 'CRM/Core/Page.php';
 
-class CRM_Autorelationshipnl_Page_TargetRules extends CRM_Core_Page {
+class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
 
   protected $_contactId;
   
@@ -50,7 +50,7 @@ class CRM_Autorelationshipnl_Page_TargetRules extends CRM_Core_Page {
    * @access protected
    */
   protected function listAction() {
-    $factory = CRM_Autorelationshipnl_TargetFactory::singleton();
+    $factory = CRM_Autorelationship_TargetFactory::singleton();
 
     $entities = $factory->getEntityList($this->_contactId);
     $this->assign('entities', $entities);
@@ -64,7 +64,7 @@ class CRM_Autorelationshipnl_Page_TargetRules extends CRM_Core_Page {
    * @access protected
    */
   protected function deleteAction() {
-    $factory = CRM_Autorelationshipnl_TargetFactory::singleton();
+    $factory = CRM_Autorelationship_TargetFactory::singleton();
     $factory->deleteEntity($this->_entity_type, $this->_entity_id, $this->_contactId);
     
     $session = CRM_Core_Session::singleton();

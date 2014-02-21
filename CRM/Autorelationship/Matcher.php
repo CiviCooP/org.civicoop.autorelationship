@@ -6,7 +6,7 @@
  * 
  */
 
-abstract class CRM_Autorelationshipnl_Matcher {
+abstract class CRM_Autorelationship_Matcher {
   
   /**
    * Returns an array with the contact IDs which should have a relationship to the contact owner of the address

@@ -3,7 +3,7 @@
 /**
  * Collection of upgrade steps
  */
-class CRM_Autorelationshipnl_Upgrader extends CRM_Autorelationshipnl_Upgrader_Base {
+class CRM_Autorelationship_Upgrader extends CRM_Autorelationship_Upgrader_Base {
 
   // By convention, functions that look like "function upgrade_NNNN()" are
   // upgrade tasks. They are executed in order (like Drupal's hook_update_N).

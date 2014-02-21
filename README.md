@@ -1,25 +1,17 @@
-Automatic relationships based on Dutch Postalcodes
+Automatic relationships
 ==================================================
 
-This extension creates automatically relationships between Contacts in CiviCRM based on postal codes. This comes in handy when you have split up your organisation into local departmants, were every departmant is responible for its own region (postal code region)
+This extension creates automatically relationships between Contacts in CiviCRM based on rules of the target contact.
+A rule is something as match on a particular city. It is possible to develop your own target rules.
 
-> **Note:** The Dutch postal code system doesn't always make sense when it comes to geographical regions although it is used for this purpose in quite a few organisations.
+This extension is developed for an organisation who wants their members be part of a local department. They wanted to achieve this automaticly.
 
 Installation instructions
 -------------------------
 
 1. Download and extract the extension into your CiviCRM extension directory
 2. Install and enable the extension
-3. Setup the custom field group **Responsible Postal Codes** for the right contact type (**by default it is applicable for all contacts**
-
-Usage instructions
-------------------
-
-1. Setup a **target** contact to fill in the postal code ranges on the tab **Responsible Postal Codes**
-2. Select an another contact and fill in a postal code and select country Netherlands. 
-3. The contact and target have now a relationship with each other
-
-> **Note:** only primary addresses are used for matching relationships.
+3. Select a target contact (e.g. a local department) and set up rules for creating an automatic relationship
 
 Technical description
 ---------------------

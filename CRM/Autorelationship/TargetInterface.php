@@ -7,7 +7,7 @@
  * @date 21 Feb 2014
  */
 
-abstract class CRM_Autorelationshipnl_TargetInterface {
+abstract class CRM_Autorelationship_TargetInterface {
   
   /**
    * Delete an target rule based target contactId and the id of the target entity
@@ -54,7 +54,7 @@ abstract class CRM_Autorelationshipnl_TargetInterface {
   /**
    * returns the associated Matcher class
    * 
-   * @return CRM_Autorelationshipnl_Matcher
+   * @return CRM_Autorelationship_Matcher
    */
   public abstract function getMatcher();
   

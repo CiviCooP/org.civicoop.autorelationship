@@ -4,7 +4,7 @@
  * This is factory class for targets for automatic relationships
  */
 
-class CRM_Autorelationshipnl_TargetFactory {
+class CRM_Autorelationship_TargetFactory {
   
   /**
    * We only need one instance of this object. So we use the singleton
@@ -36,7 +36,7 @@ class CRM_Autorelationshipnl_TargetFactory {
    */
   static function singleton($fresh = FALSE) {
     if (self::$_singleton == NULL || $fresh) {
-      self::$_singleton = new CRM_Autorelationshipnl_TargetFactory();
+      self::$_singleton = new CRM_Autorelationship_TargetFactory();
     }
     return self::$_singleton;
   }
@@ -95,7 +95,7 @@ class CRM_Autorelationshipnl_TargetFactory {
     $hooks = CRM_Utils_Hook::singleton();
     $hooks->invoke(1,
       $interfaces, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject,
-      'civicrm_autorelationshipnl_targetinterfaces'
+      'autorelationshipnl_autorelationship_targetinterfaces'
       );
     return $interfaces;
   }
@@ -104,7 +104,7 @@ class CRM_Autorelationshipnl_TargetFactory {
    * Returns an interface for a given entity
    * 
    * @param String $entity
-   * @return CRM_Autorelationshipnl_TargetInterface
+   * @return CRM_Autorelationship_TargetInterface
    * @throws CRM_Core_Exception
    */
   protected function getInterfaceForEntity($entity) {

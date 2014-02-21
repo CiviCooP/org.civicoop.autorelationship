@@ -1,14 +1,14 @@
 <?php
 
-require_once 'autorelationshipnl.civix.php';
+require_once 'autorelationship.civix.php';
 
 /**
  * Implementation of hook_civicrm_config
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
  */
-function autorelationshipnl_civicrm_config(&$config) {
-  _autorelationshipnl_civix_civicrm_config($config);
+function autorelationship_civicrm_config(&$config) {
+  _autorelationship_civix_civicrm_config($config);
 }
 
 /**
@@ -18,8 +18,8 @@ function autorelationshipnl_civicrm_config(&$config) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_xmlMenu
  */
-function autorelationshipnl_civicrm_xmlMenu(&$files) {
-  _autorelationshipnl_civix_civicrm_xmlMenu($files);
+function autorelationship_civicrm_xmlMenu(&$files) {
+  _autorelationship_civix_civicrm_xmlMenu($files);
 }
 
 /**
@@ -27,8 +27,8 @@ function autorelationshipnl_civicrm_xmlMenu(&$files) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
  */
-function autorelationshipnl_civicrm_install() {
-  return _autorelationshipnl_civix_civicrm_install();
+function autorelationship_civicrm_install() {
+  return _autorelationship_civix_civicrm_install();
 }
 
 /**
@@ -36,8 +36,8 @@ function autorelationshipnl_civicrm_install() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_uninstall
  */
-function autorelationshipnl_civicrm_uninstall() {
-  return _autorelationshipnl_civix_civicrm_uninstall();
+function autorelationship_civicrm_uninstall() {
+  return _autorelationship_civix_civicrm_uninstall();
 }
 
 /**
@@ -45,8 +45,8 @@ function autorelationshipnl_civicrm_uninstall() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
-function autorelationshipnl_civicrm_enable() {
-  return _autorelationshipnl_civix_civicrm_enable();
+function autorelationship_civicrm_enable() {
+  return _autorelationship_civix_civicrm_enable();
 }
 
 /**
@@ -54,8 +54,8 @@ function autorelationshipnl_civicrm_enable() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_disable
  */
-function autorelationshipnl_civicrm_disable() {
-  return _autorelationshipnl_civix_civicrm_disable();
+function autorelationship_civicrm_disable() {
+  return _autorelationship_civix_civicrm_disable();
 }
 
 /**
@@ -69,8 +69,8 @@ function autorelationshipnl_civicrm_disable() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
-function autorelationshipnl_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  return _autorelationshipnl_civix_civicrm_upgrade($op, $queue);
+function autorelationship_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
+  return _autorelationship_civix_civicrm_upgrade($op, $queue);
 }
 
 /**
@@ -81,8 +81,8 @@ function autorelationshipnl_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) 
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_managed
  */
-function autorelationshipnl_civicrm_managed(&$entities) {
-  return _autorelationshipnl_civix_civicrm_managed($entities);
+function autorelationship_civicrm_managed(&$entities) {
+  return _autorelationship_civix_civicrm_managed($entities);
 }
 
 /**
@@ -94,8 +94,8 @@ function autorelationshipnl_civicrm_managed(&$entities) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseTypes
  */
-function autorelationshipnl_civicrm_caseTypes(&$caseTypes) {
-  _autorelationshipnl_civix_civicrm_caseTypes($caseTypes);
+function autorelationship_civicrm_caseTypes(&$caseTypes) {
+  _autorelationship_civix_civicrm_caseTypes($caseTypes);
 }
 
 /**
@@ -103,18 +103,18 @@ function autorelationshipnl_civicrm_caseTypes(&$caseTypes) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterSettingsFolders
  */
-function autorelationshipnl_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
-  _autorelationshipnl_civix_civicrm_alterSettingsFolders($metaDataFolders);
+function autorelationship_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
+  _autorelationship_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
 
 /**
  * Implementation of hook_civicrm_post
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_post
  */
-function autorelationshipnl_civicrm_post( $op, $objectName, $objectId, &$objectRef ) {
+function autorelationship_civicrm_post( $op, $objectName, $objectId, &$objectRef ) {
   if ($objectName == 'Address' && $objectRef instanceof CRM_Core_DAO_Address) {
-    $matcher = new CRM_Autorelationshipnl_CityMatcher();
-    $creator = new CRM_Autorelationshipnl_Creator('Lid op basis van postcode', $matcher);
+    $matcher = new CRM_Autorelationship_CityMatcher();
+    $creator = new CRM_Autorelationship_Creator('Lid op basis van postcode', $matcher);
     $creator->matchAndCreate($objectRef);
   }
 }
@@ -124,7 +124,7 @@ function autorelationshipnl_civicrm_post( $op, $objectName, $objectId, &$objectR
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_tabs
  */
 
-function autorelationshipnl_civicrm_tabs( &$tabs, $contactID ) { 
+function autorelationship_civicrm_tabs( &$tabs, $contactID ) { 
     // add a tab with the linked cities
     $url = CRM_Utils_System::url( 'civicrm/contact/tab/autorelationship_targetrules',
                                   "cid=$contactID&snippet=1" );
@@ -135,10 +135,10 @@ function autorelationshipnl_civicrm_tabs( &$tabs, $contactID ) {
 }
 
 /**
- * Implementation of hook__civicrm_autorelationshipnl_targetinterfaces
+ * Implementation of hook__civicrm_autorelationship_targetinterfaces
  * 
  * @param array $interfaces
  */
-function autorelationshipnl_civicrm_autorelationshipnl_targetinterfaces(&$interfaces) {
-  $interfaces[] = new CRM_Autorelationshipnl_CityTarget();
+function autorelationship_autorelationship_targetinterfaces(&$interfaces) {
+  $interfaces[] = new CRM_Autorelationship_CityTarget();
 }

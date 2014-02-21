@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<extension key="org.civicoop.autorelationshipnl" type="module">
-  <file>autorelationshipnl</file>
+<extension key="org.civicoop.autorelationship" type="module">
+  <file>autorelationship</file>
   <name>Automatic relationships</name>
-  <description>Automatic relationships based on a Dutch postal code</description>
+  <description>Automatic relationships based on target rules</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Jaap Jansma</author>
@@ -16,6 +16,6 @@
   </compatibility>
   <comments>This is a new, undeveloped module</comments>
   <civix>
-    <namespace>CRM/Autorelationshipnl</namespace>
+    <namespace>CRM/Autorelationship</namespace>
   </civix>
 </extension>

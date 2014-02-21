@@ -9,7 +9,7 @@
 * @date 21 Feb 2014
  */
 
-class CRM_Autorelationshipnl_CityTarget extends CRM_Autorelationshipnl_TargetInterface {
+class CRM_Autorelationship_CityTarget extends CRM_Autorelationship_TargetInterface {
   
   public function getEntitySystemName() {
     return 'city';
@@ -24,7 +24,7 @@ class CRM_Autorelationshipnl_CityTarget extends CRM_Autorelationshipnl_TargetInt
   }
   
   public function listEntitiesForTarget($targetContactId) {
-    $sql = "SELECT * FROM `civicrm_autorelationshipnl_contact_city` WHERE `contact_id` = %1 ORDER BY `city`";
+    $sql = "SELECT * FROM `civicrm_autorelationship_contact_city` WHERE `contact_id` = %1 ORDER BY `city`";
     $dao = CRM_Core_DAO::executeQuery($sql, array('1' => array($targetContactId, 'Integer')));
 
     $cities = array();
@@ -42,7 +42,7 @@ class CRM_Autorelationshipnl_CityTarget extends CRM_Autorelationshipnl_TargetInt
   }
   
   public function deleteTarget($entityId, $targetContactId) {
-    $sql = "DELETE FROM `civicrm_autorelationshipnl_contact_city` WHERE `id` = %2 AND `contact_id` = %1";
+    $sql = "DELETE FROM `civicrm_autorelationship_contact_city` WHERE `id` = %2 AND `contact_id` = %1";
     $dao = CRM_Core_DAO::executeQuery($sql, array(
         '1' => array($targetContactId, 'Integer'),
         '2' => array($entityId, 'Integer')

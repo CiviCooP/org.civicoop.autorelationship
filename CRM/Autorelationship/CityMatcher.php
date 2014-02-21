@@ -4,7 +4,7 @@
  * This class find target ID's for the automatic relationship based on the postal codes
  */
 
-class CRM_Autorelationshipnl_CityMatcher extends CRM_Autorelationshipnl_Matcher {
+class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
   
   public function __construct() {
     
@@ -26,7 +26,7 @@ class CRM_Autorelationshipnl_CityMatcher extends CRM_Autorelationshipnl_Matcher 
       return array();
     }
 
-    $sql = "SELECT * FROM `civicrm_autorelationshipnl_contact_city` WHERE LOWER(`city`) = LOWER('".$objAddress->city."')";
+    $sql = "SELECT * FROM `civicrm_autorelationship_contact_city` WHERE LOWER(`city`) = LOWER('".$objAddress->city."')";
     
     $dao = CRM_Core_DAO::executeQuery($sql);
     $return = array();

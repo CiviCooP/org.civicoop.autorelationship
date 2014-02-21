@@ -4,7 +4,7 @@
  * The class below is responible for creating, updating and ending relationships based on dutch postal codes.
  */
 
-class CRM_Autorelationshipnl_Creator {
+class CRM_Autorelationship_Creator {
 
   protected $relationship_type_id;
   
@@ -24,11 +24,11 @@ class CRM_Autorelationshipnl_Creator {
   
   /**
    *
-   * @var CRM_Autorelationshipnl_Matcher 
+   * @var CRM_Autorelationship_Matcher 
    */
   protected $matcher;
   
-  public function __construct($relationship_type_name_a_b, CRM_Autorelationshipnl_Matcher $matcher) {
+  public function __construct($relationship_type_name_a_b, CRM_Autorelationship_Matcher $matcher) {
     $this->loadRelationshipType($relationship_type_name_a_b);
     $this->autogroup_id = $this->getCustomGroupIdByName('Automatic_Relationship');
     $this->addressfield_id = $this->getCustomFieldIdByNameAndGroup('Address_ID', $this->autogroup_id);

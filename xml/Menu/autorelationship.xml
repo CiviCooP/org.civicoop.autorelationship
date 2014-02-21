@@ -2,7 +2,7 @@
 <menu>
   <item>
     <path>civicrm/contact/tab/autorelationship_targetrules</path>
-    <page_callback>CRM_Autorelationshipnl_Page_TargetRules</page_callback>
+    <page_callback>CRM_Autorelationship_Page_TargetRules</page_callback>
     <title>Contact automatic relationship</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
