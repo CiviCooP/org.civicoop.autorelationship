@@ -34,6 +34,31 @@ abstract class CRM_Autorelationship_Matcher {
   }
   
   /**
+   * function is executed when a target rule is deleted from a target (all relationships should be ended)
+   * 
+   * @param int $entityId
+   * @param String $entity
+   * @param int $targetContactId
+   */
+  public function onDeleteTargetRule($entityId, $entity, $targetContactId) {
+    $params['contact_id_b'] = $targetContactId;
+    $params['relationship_type_id'] = $this->getRelationshipTypeId();
+    $params['custom_'.$this->automatic_relationship_targetrule_id] = $entityId;
+    $params['custom_'.$this->automatic_relationship_targetrule_entity] = $entity;
+    $result = civicrm_api3('Relationship', 'get', $params);
+    foreach($result['values'] as $relationship) {
+      if (isset($relationship['end_date']) && strlen($relationship['end_date'])) {
+        continue; //this is an ended relationship
+      }
+      
+      $endDate = new \DateTime();
+      $endParams['id'] = $relationship['id'];
+      $endParams['end_date'] = $endDate->format('YmdHis'); //set end date for this relationship, so that it will be ended
+      civicrm_api3('Relationship', 'Create', $endParams);
+    }
+  }
+  
+  /**
    * Sets the data for the matcher
    * 
    * @param array $data
@@ -87,8 +112,12 @@ abstract class CRM_Autorelationship_Matcher {
    * @param array $target = array ( 'contact_id' => id, 'entity_id' => int, 'entity' => string)
    */
   public function updateRelationshipParameters(&$arrRelationshipParams, $target) {
-    $arrRelationshipParams['custom_'.$this->automatic_relationship_targetrule_id] = $target['entity_id'];
-    $arrRelationshipParams['custom_'.$this->automatic_relationship_targetrule_entity] = $target['entity'];
+    if (isset($target['entity_id'])) {
+      $arrRelationshipParams['custom_'.$this->automatic_relationship_targetrule_id] = $target['entity_id'];
+    }
+    if (isset($target['entity'])) {
+      $arrRelationshipParams['custom_'.$this->automatic_relationship_targetrule_entity] = $target['entity'];
+    }
   }
 
   public function getRelationshipTypeId() {

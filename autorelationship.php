@@ -113,7 +113,7 @@ function autorelationship_civicrm_alterSettingsFolders(&$metaDataFolders = NULL)
  */
 function autorelationship_civicrm_post( $op, $objectName, $objectId, &$objectRef ) {
   if ($objectName == 'Address' && $objectRef instanceof CRM_Core_DAO_Address) {
-    $factory = new CRM_Autorelationship_TargetFactory();
+    $factory = CRM_Autorelationship_TargetFactory::singleton();
     $matcher = $factory->getMatcherForEntity('city', array('address' => $objectRef));
     $matcher->matchAndCreate();
   }

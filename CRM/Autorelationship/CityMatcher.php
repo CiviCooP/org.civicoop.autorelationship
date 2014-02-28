@@ -75,7 +75,7 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
       $target['entity_id'] = $dao->id;
       $target['entity'] = $this->interface->getEntitySystemName();
       
-      $return[] = $dao->contact_id;
+      $return[] = $target;
     }
     
     return array_unique($return);

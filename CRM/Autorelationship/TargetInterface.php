@@ -34,7 +34,7 @@ abstract class CRM_Autorelationship_TargetInterface {
   public function deleteTarget($entityId, $targetContactId) {
     $this->deleteTargetEntity($entityId, $targetContactId);
     $matcher = $this->getMatcher();
-    $matcher->onDeleteTargetRule($entityId, $targetContactId);
+    $matcher->onDeleteTargetRule($entityId,$this->getEntitySystemName(), $targetContactId);
   }
   
   
