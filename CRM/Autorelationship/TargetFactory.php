@@ -136,6 +136,28 @@ class CRM_Autorelationship_TargetFactory {
   }
   
   /**
+   * Returns a matcher for a given entity
+   * 
+   * @param String $entity
+   * @param array $data
+   * @return CRM_Autorelationship_Matcher
+   * @throws CRM_Core_Exception
+   */
+  public function getMatcherForEntity($entity, $data = null) {
+    foreach($this->interfaces as $interface) {
+      if ($interface->getEntitySystemName() == $entity) {
+        $matcher = $interface->getMatcher();
+        if (!empty($data)) {
+          $matcher->setData($data);
+        }
+        return $matcher;
+      }
+    }
+    
+    throw new CRM_Core_Exception('No valid entity type found');
+  }
+  
+  /**
    * Return an array of all interfaces
    * 
    * @return array

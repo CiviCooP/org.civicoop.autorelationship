@@ -28,17 +28,21 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
    * 
    * @param $objAddress
    */
-  public function __construct(CRM_Autorelationship_TargetInterface $interface, $objAddress=null) {
-    parent::__construct($interface);
-    
-    $this->objAddress = $objAddress;
-    
+  public function __construct(CRM_Autorelationship_TargetInterface $interface) {
+    parent::__construct($interface);    
     $this->autogroup_id = $this->getCustomGroupIdByName('autorelationship_city_based');
     $this->addressfield_id = $this->getCustomFieldIdByNameAndGroup('Address_ID', $this->autogroup_id);
   }
   
   public function getRelationshipTypeNameAB() {
     return 'city_based';
+  }
+  
+  public function setData($data) {
+    parent::setData($data);
+    if (isset($this->data['address'])) {
+      $this->objAddress = $this->data['address'];
+    }
   }
   
   /**

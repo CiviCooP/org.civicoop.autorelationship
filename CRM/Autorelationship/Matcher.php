@@ -17,6 +17,13 @@ abstract class CRM_Autorelationship_Matcher {
    * @var CRM_Autorelationship_TargetInterface 
    */
   protected $interface;
+  
+  /**
+   * The data used for the matcher
+   * 
+   * @var array $data
+   */
+  protected $data;
 
   public function __construct(CRM_Autorelationship_TargetInterface $interface) {
     $this->interface = $interface;
@@ -24,6 +31,15 @@ abstract class CRM_Autorelationship_Matcher {
     $this->automatic_relationship_customgroup_id = $this->getCustomGroupIdByName('automatic_relationship');
     $this->automatic_relationship_targetrule_id = $this->getCustomFieldIdByNameAndGroup('target_rule_id', $this->automatic_relationship_customgroup_id);
     $this->automatic_relationship_targetrule_entity = $this->getCustomFieldIdByNameAndGroup('target_rule_entity', $this->automatic_relationship_customgroup_id);
+  }
+  
+  /**
+   * Sets the data for the matcher
+   * 
+   * @param array $data
+   */
+  public function setData($data) {
+    $this->data = $data;
   }
 
   /**
@@ -129,6 +145,15 @@ abstract class CRM_Autorelationship_Matcher {
     $params['name'] = $name;
     $result = civicrm_api3('CustomField', 'getsingle', $params);
     return $result['id'];
+  }
+  
+  /**
+   * Matches target contact ID's and updates, end or creates the relationships
+   * 
+   */
+  public function matchAndCreate() {
+    $creator = new CRM_Autorelationship_Creator($this);
+    $creator->matchAndCreate();
   }
 
 }
