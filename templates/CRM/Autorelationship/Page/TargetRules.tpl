@@ -21,7 +21,7 @@
         {foreach from=$entities item=entity}
             {foreach from=$entity item=item}
             <tr>
-                <td>{$item.entity_label}</td>
+                <td>{$item.relationship_description}</td>
                 <td>{$item.label}</td>
                 <td>
                     {assign var='delete_q' value='action=delete&entity='|cat:$item.entity|cat:'&entity_id='|cat:$item.entity_id|cat:'&cid='|cat:$contactId}

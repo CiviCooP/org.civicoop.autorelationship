@@ -50,6 +50,7 @@ class CRM_Autorelationship_TargetFactory {
    *  'entity_label' => (String) Human name of the entity
    *  'entity_id' => (int) Id of the entity
    *  'label' => (String) The label of the entity
+   *  'relationship_description' => (String) the description of the relationship
    * ),
    * [1][] => ...
    * 
@@ -65,6 +66,7 @@ class CRM_Autorelationship_TargetFactory {
         $e['entity_id'] = $entity['entity_id'];
         $e['entity'] = $interface->getEntitySystemName();
         $e['entity_label'] = $interface->getEntityHumanName();
+        $e['relationship_description'] = $interface->getMatcher()->getRelationshipDescription();
         $weight = $entity['weight'];
         $id = $entity['entity_id'];
         

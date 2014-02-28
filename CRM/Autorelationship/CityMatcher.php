@@ -88,10 +88,10 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
    * @return int the contact ID for the A side of the relationship
    */
   public function getContactId() {
-    if (!isset($this->objAddress) || !isset($objAddress->contact_id)) {
+    if (!isset($this->objAddress) || !isset($this->objAddress->contact_id)) {
       throw new Exception('Address not set');
     } 
-    return $objAddress->contact_id;
+    return $this->objAddress->contact_id;
   }
   
   /**

@@ -20,7 +20,7 @@ class CRM_Autorelationship_CityTarget extends CRM_Autorelationship_TargetInterfa
   }
   
   public function getMatcher() {
-    return new CityMatcher();
+    return new CRM_Autorelationship_CityMatcher();
   }
   
   public function listEntitiesForTarget($targetContactId) {

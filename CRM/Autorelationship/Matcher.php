@@ -55,6 +55,14 @@ abstract class CRM_Autorelationship_Matcher {
     return $relationshiptype['id'];
   }
   
+  public function getRelationshipDescription() {
+    $relationshiptype = $this->getRelationshipType();
+    if (!isset($relationshiptype['description'])) {
+      return '';
+    }
+    return $relationshiptype['description'];
+  }
+  
   private function getRelationshipType() {
     $name_a_b = $this->getRelationshipTypeNameAB();
     if (!isset($this->relationship_types[$name_a_b])) {
