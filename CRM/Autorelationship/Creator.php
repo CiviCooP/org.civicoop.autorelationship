@@ -1,7 +1,12 @@
 <?php
 
 /* 
- * The class below is responible for creating, updating and ending relationships based on dutch postal codes.
+ * The class below is responible for creating, updating and ending relationships based on criteria given in the matcher class
+ * This class is repsonible for finding the targets.
+ * 
+ * Usage for example in the hook_civicrm_post on update of an address
+ *  $creator = new CRM_Autorelationship_Creator(new YourOwnMatcher());
+ *  $creator->
  */
 
 class CRM_Autorelationship_Creator {
@@ -9,73 +14,49 @@ class CRM_Autorelationship_Creator {
   protected $relationship_type_id;
   
   /**
-   * The ID of the custom field group 'Automatic Relationship'
-   * 
-   * @var int
-   */
-  protected $autogroup_id;
-  
-  /**
-   * The ID of the address ID field on relationship, which is a custom field
-   * 
-   * @var int
-   */
-  protected $addressfield_id;
-  
-  /**
    *
    * @var CRM_Autorelationship_Matcher 
    */
   protected $matcher;
   
-  public function __construct($relationship_type_name_a_b, CRM_Autorelationship_Matcher $matcher) {
-    $this->loadRelationshipType($relationship_type_name_a_b);
-    $this->autogroup_id = $this->getCustomGroupIdByName('Automatic_Relationship');
-    $this->addressfield_id = $this->getCustomFieldIdByNameAndGroup('Address_ID', $this->autogroup_id);
+  public function __construct(CRM_Autorelationship_Matcher $matcher) {
+    $this->relationship_type_id = $matcher->getRelationshipTypeId();
+    
     $this->matcher = $matcher;
   }
   
   /**
    * Matches target contact ID's and updates, end or creates the relationships
    * 
-   * @param type $objAddress The address which is used as a base for matching
    */
-  public function matchAndCreate($objAddress) {
+  public function matchAndCreate() {
     //do the matching
-    $target_contact_ids = $this->matcher->findTargetContactIds($objAddress);
-    $this->endOldRelationships($objAddress, $target_contact_ids, $this->relationship_type_id);
+    $target_contact_ids = $this->matcher->findTargetContactIds();
+    $contact_id = $this->matcher->getContactId();
+    
+    $this->endOldRelationships($contact_id, $target_contact_ids, $this->relationship_type_id);
     foreach($target_contact_ids as $target_contact_id) {
            
       /* check if a relationship exist */
-      $existingId = $this->getExtistingRelationshipId($objAddress, $target_contact_id, $this->relationship_type_id);
+      $existingId = $this->getExtistingRelationshipId($contact_id, $target_contact_id, $this->relationship_type_id);
       
       if ($existingId === false) {
-        $this->createNewRelationship($objAddress, $target_contact_id, $this->relationship_type_id);
+        $this->createNewRelationship($contact_id, $target_contact_id, $this->relationship_type_id);
       } else {
         //relationship exist
         // Update it so it becomes active again
-        $this->updateRelationship($existingId, $objAddress, $target_contact_id);
+        $this->updateRelationship($existingId, $target_contact_id);
       }
     }
-  }
-  
-  /**
-   * Returns an array with the matched target contact ids.
-   * 
-   * @param object $objAddress
-   */
-  protected function findTargetContactIds($objAddress) {
-    return array();
   }
   
   /**
    * Update an existing relationship so it becomes active again.
    * 
    * @param int $existingId
-   * @param object $objAddress
    * @param int $target_contact_id
    */
-  protected function updateRelationship($existingId, $objAddress, $target_contact_id) {
+  protected function updateRelationship($existingId, $target_contact_id) {
       $params['id'] = $existingId;
       $params['is_active'] = '1';
       try {
@@ -89,17 +70,18 @@ class CRM_Autorelationship_Creator {
    * retruns the id of an existing active relationship
    * returns false when none exist
    * 
-   * @param object $objAddress
+   * @param int $objAddress
    * @param int $target_contact_id
    * @param int $relationship_type_id
    */
-  protected function getExtistingRelationshipId($objAddress, $target_contact_id, $relationship_type_id) {    
+  protected function getExtistingRelationshipId($contact_id, $target_contact_id, $relationship_type_id) {    
     $id = false;
     
-    $params['contact_id_a'] = $objAddress->contact_id;
+    $params['contact_id_a'] = $contact_id;
     $params['contact_id_b'] = $target_contact_id;
     $params['relationship_type_id'] = $relationship_type_id;
-    $params['custom_'.$this->addressfield_id] = $objAddress->id;
+    
+    $this->matcher->updateRelationshipParameters($params);
     
     $result = civicrm_api3('Relationship', 'get', $params);
     if (isset($result['values']) && is_array($result['values'])) {
@@ -125,15 +107,16 @@ class CRM_Autorelationship_Creator {
   
   /**
    * End all automatic relationships who are no longer a target anymore.
-   * @param object $objAddress
+   * @param int $contact_id
    * @param array $target_contact_ids
    * @param int $relationship_type_id
    */
-  protected function endOldRelationships($objAddress, $target_contact_ids, $relationship_type_id) {
+  protected function endOldRelationships($contact_id, $target_contact_ids, $relationship_type_id) {
     $params['relationship_type_id'] = $relationship_type_id;
-    $params['contact_id_a'] = $objAddress->contact_id;
-    $params['return.custom_'.$this->addressfield_id] = 1;
-    $params['custom_'.$this->addressfield_id] = $objAddress->id;
+    $params['contact_id_a'] = $contact_id;
+    
+    $this->matcher->updateRelationshipParameters($params);
+    
     $result = civicrm_api3('Relationship', 'get', $params);
     if (isset($result['values']) && is_array($result['values'])) {
       foreach($result['values'] as $relationship) {
@@ -142,9 +125,9 @@ class CRM_Autorelationship_Creator {
           continue;
         }
         
-        $addressEndDate = new \DateTime();
+        $endDate = new \DateTime();
         $endParams['id'] = $relationship['id'];
-        $endParams['end_date'] = $addressEndDate->format('YmdHis'); //set end date for this relationship, so that it will be ended
+        $endParams['end_date'] = $endDate->format('YmdHis'); //set end date for this relationship, so that it will be ended
         civicrm_api3('Relationship', 'Create', $endParams);
       }
     }
@@ -154,17 +137,18 @@ class CRM_Autorelationship_Creator {
   
   /**
    * 
-   * @param object $objAddress - The address which is used as a base for matching
+   * @param int $contact_id - The address which is used as a base for matching
    * @param int $target_contact_id The target contact for the relationship
    * @param int $relationship_type_id the id of the relationship type to create
    */
-  protected function createNewRelationship($objAddress, $target_contact_id, $relationship_type_id) {
-    //var_dump($objAddress); exit();
-    $relationship_params['contact_id_a'] = $objAddress->contact_id;
+  protected function createNewRelationship($contact_id, $target_contact_id, $relationship_type_id) {
+    $relationship_params['contact_id_a'] = $contact_id;
     $relationship_params['contact_id_b'] = $target_contact_id;
     $relationship_params['relationship_type_id'] = $relationship_type_id;
     $relationship_params['start_date'] = date('YmdHis');
-    $relationship_params['custom_'.$this->addressfield_id] = $objAddress->id;
+    
+    $this->matcher->updateRelationshipParameters($relationship_params);
+    
     try {
       civicrm_api3('Relationship', 'Create', $relationship_params);
     } catch (Exception $e) {
@@ -173,41 +157,4 @@ class CRM_Autorelationship_Creator {
     }
   }
   
-  /**
-   * Set the relationship_type_id parameter by finding the right relationship based on the name_a_b
-   * 
-   * @param String $relationship_type_name_a_b
-   */
-  private function loadRelationshipType($relationship_type_name_a_b) {
-    $params['name_a_b'] = $relationship_type_name_a_b;
-    $result = civicrm_api3('RelationshipType', 'getsingle', $params);
-    $this->relationship_type_id = $result['id'];
-  }
-  
-  /**
-   * Returns the id of a custom group, only relationship groups are checked
-   * 
-   * @param string $name
-   * @return int
-   */
-  private function getCustomGroupIdByName($name) {
-    $params['name'] = $name;
-    $params['extends'] = 'Relationship';
-    $result = civicrm_api3('CustomGroup', 'getsingle', $params);
-    return $result['id'];
-  }
-  
-  /**
-   * Returns the ID of a custom field retrieved by its name and group_id
-   * 
-   * @param String $name
-   * @param int $group_id
-   * @return int
-   */
-  private function getCustomFieldIdByNameAndGroup($name, $group_id) {
-    $params['custom_group_id'] = $group_id;
-    $params['name'] = $name;
-    $result = civicrm_api3('CustomField', 'getsingle', $params);
-    return $result['id'];
-  }
 }

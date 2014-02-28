@@ -6,11 +6,34 @@
 
 class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
   
-  public function __construct() {
+  protected $objAddress;
+  
+  /**
+   * The ID of the custom field group 'Automatic Relationship'
+   * 
+   * @var int
+   */
+  protected $autogroup_id;
+  
+  /**
+   * The ID of the address ID field on relationship, which is a custom field
+   * 
+   * @var int
+   */
+  protected $addressfield_id;
+  
+  /**
+   * 
+   * @param $objAddress
+   */
+  public function __construct($objAddress=null) {
+    $this->objAddress = $objAddress;
     
+    $this->autogroup_id = $this->getCustomGroupIdByName('Automatic_Relationship');
+    $this->addressfield_id = $this->getCustomFieldIdByNameAndGroup('Address_ID', $this->autogroup_id);
   }
   
-  public function getRelationshipType() {
+  public function getRelationshipTypeNameAB() {
     return 'city_based';
   }
   
@@ -20,7 +43,12 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
    * @param object $objAddress
    * @return array
    */
-  public function findTargetContactIds($objAddress) {
+  public function findTargetContactIds() {
+    if (!isset($this->objAddress)) {
+      throw new Exception('Address not set');
+    }    
+    $objAddress = $this->objAddress;
+    
     if ($objAddress->country_id != 1152) {
       return array(); //do not match if the country of the address is outside Netherlands
     }
@@ -39,6 +67,58 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
     }
     
     return array_unique($return);
+  }
+  
+  /**
+   * Update the relationship parameters. E.g. for setting a custom field
+   * 
+   * @param type $arrRelationshipParams
+   */
+  public function updateRelationshipParameters(&$arrRelationshipParams) {
+    if (!isset($this->objAddress)) {
+      throw new Exception('Address not set');
+    } 
+    $arrRelationshipParams['custom_'.$this->addressfield_id] = $this->objAddress->id;
+    //$arrRelationshipParams['return.custom_'.$this->addressfield_id] = 1;
+  }
+  
+  /**
+   * Returns the contact ID for on the A side of the relationship
+   * 
+   * @return int the contact ID for the A side of the relationship
+   */
+  public function getContactId() {
+    if (!isset($this->objAddress) || !isset($objAddress->contact_id)) {
+      throw new Exception('Address not set');
+    } 
+    return $objAddress->contact_id;
+  }
+  
+  /**
+   * Returns the id of a custom group, only relationship groups are checked
+   * 
+   * @param string $name
+   * @return int
+   */
+  private function getCustomGroupIdByName($name) {
+    $params['name'] = $name;
+    $params['extends'] = 'Relationship';
+    $result = civicrm_api3('CustomGroup', 'getsingle', $params);
+    return $result['id'];
+  }
+  
+  /**
+   * Returns the ID of a custom field retrieved by its name and group_id
+   * 
+   * @param String $name
+   * @param int $group_id
+   * @return int
+   */
+  private function getCustomFieldIdByNameAndGroup($name, $group_id) {
+    $params['custom_group_id'] = $group_id;
+    $params['name'] = $name;
+    $result = civicrm_api3('CustomField', 'getsingle', $params);
+    return $result['id'];
   }
   
 }

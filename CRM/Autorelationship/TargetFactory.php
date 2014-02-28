@@ -141,4 +141,6 @@ class CRM_Autorelationship_TargetFactory {
   public function getTargetInterfaces() {
     return $this->interfaces;
   }
+  
+  
 }

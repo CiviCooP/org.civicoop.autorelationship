@@ -113,9 +113,9 @@ function autorelationship_civicrm_alterSettingsFolders(&$metaDataFolders = NULL)
  */
 function autorelationship_civicrm_post( $op, $objectName, $objectId, &$objectRef ) {
   if ($objectName == 'Address' && $objectRef instanceof CRM_Core_DAO_Address) {
-    $matcher = new CRM_Autorelationship_CityMatcher();
-    $creator = new CRM_Autorelationship_Creator('Lid op basis van postcode', $matcher);
-    $creator->matchAndCreate($objectRef);
+    $matcher = new CRM_Autorelationship_CityMatcher($objectRef);
+    $creator = new CRM_Autorelationship_Creator($matcher);
+    $creator->matchAndCreate();
   }
 }
 
