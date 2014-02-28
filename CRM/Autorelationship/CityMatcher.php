@@ -22,11 +22,15 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
    */
   protected $addressfield_id;
   
+  
+  
   /**
    * 
    * @param $objAddress
    */
-  public function __construct($objAddress=null) {
+  public function __construct(CRM_Autorelationship_TargetInterface $interface, $objAddress=null) {
+    parent::__construct($interface);
+    
     $this->objAddress = $objAddress;
     
     $this->autogroup_id = $this->getCustomGroupIdByName('autorelationship_city_based');
@@ -63,6 +67,10 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
     $dao = CRM_Core_DAO::executeQuery($sql);
     $return = array();
     while($dao->fetch()) {
+      $target['contact_id'] = $dao->contact_id;
+      $target['entity_id'] = $dao->id;
+      $target['entity'] = $this->interface->getEntitySystemName();
+      
       $return[] = $dao->contact_id;
     }
     
@@ -73,11 +81,14 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
    * Update the relationship parameters. E.g. for setting a custom field
    * 
    * @param type $arrRelationshipParams
+   * @param array $target = array ( 'contact_id' => id, 'entity_id' => int, 'entity' => string)
    */
-  public function updateRelationshipParameters(&$arrRelationshipParams) {
+  public function updateRelationshipParameters(&$arrRelationshipParams, $target) {
+    parent::updateRelationshipParameters($arrRelationshipParams, $target);
+    
     if (!isset($this->objAddress)) {
       throw new Exception('Address not set');
-    } 
+    }  
     $arrRelationshipParams['custom_'.$this->addressfield_id] = $this->objAddress->id;
     //$arrRelationshipParams['return.custom_'.$this->addressfield_id] = 1;
   }
@@ -92,33 +103,6 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
       throw new Exception('Address not set');
     } 
     return $this->objAddress->contact_id;
-  }
-  
-  /**
-   * Returns the id of a custom group, only relationship groups are checked
-   * 
-   * @param string $name
-   * @return int
-   */
-  private function getCustomGroupIdByName($name) {
-    $params['name'] = $name;
-    $params['extends'] = 'Relationship';
-    $result = civicrm_api3('CustomGroup', 'getsingle', $params);
-    return $result['id'];
-  }
-  
-  /**
-   * Returns the ID of a custom field retrieved by its name and group_id
-   * 
-   * @param String $name
-   * @param int $group_id
-   * @return int
-   */
-  private function getCustomFieldIdByNameAndGroup($name, $group_id) {
-    $params['custom_group_id'] = $group_id;
-    $params['name'] = $name;
-    $result = civicrm_api3('CustomField', 'getsingle', $params);
-    return $result['id'];
   }
   
 }

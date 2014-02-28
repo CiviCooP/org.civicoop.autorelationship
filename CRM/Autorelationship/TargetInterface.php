@@ -19,7 +19,24 @@ abstract class CRM_Autorelationship_TargetInterface {
    * @return void
    * @throws CRM_Core_Exception
    */
-  public abstract function deleteTarget($entityId, $targetContactId);
+  protected abstract function deleteTargetEntity($entityId, $targetContactId);
+  
+  /**
+   * Delete an target rule based target contactId and the id of the target entity
+   * 
+   * Should throw an exception on error
+   * 
+   * @param int $entityId
+   * @param int $targetContactId
+   * @return void
+   * @throws CRM_Core_Exception
+   */
+  public function deleteTarget($entityId, $targetContactId) {
+    $this->deleteTargetEntity($entityId, $targetContactId);
+    $matcher = $this->getMatcher();
+    $matcher->onDeleteTargetRule($entityId, $targetContactId);
+  }
+  
   
   /**
    * Returns an array (list) of entities for a specific target contact
@@ -64,5 +81,32 @@ abstract class CRM_Autorelationship_TargetInterface {
    * @return String
    */
   public abstract function getAddFormUrl();
+  
+  /**
+   * Returns the id of a custom group, only relationship groups are checked
+   * 
+   * @param string $name
+   * @return int
+   */
+  protected function getCustomGroupIdByName($name) {
+    $params['name'] = $name;
+    $params['extends'] = 'Relationship';
+    $result = civicrm_api3('CustomGroup', 'getsingle', $params);
+    return $result['id'];
+  }
+  
+  /**
+   * Returns the ID of a custom field retrieved by its name and group_id
+   * 
+   * @param String $name
+   * @param int $group_id
+   * @return int
+   */
+  protected function getCustomFieldIdByNameAndGroup($name, $group_id) {
+    $params['custom_group_id'] = $group_id;
+    $params['name'] = $name;
+    $result = civicrm_api3('CustomField', 'getsingle', $params);
+    return $result['id'];
+  }
   
 }

@@ -20,7 +20,7 @@ class CRM_Autorelationship_CityTarget extends CRM_Autorelationship_TargetInterfa
   }
   
   public function getMatcher() {
-    return new CRM_Autorelationship_CityMatcher();
+    return new CRM_Autorelationship_CityMatcher($this);
   }
   
   public function listEntitiesForTarget($targetContactId) {
@@ -41,7 +41,7 @@ class CRM_Autorelationship_CityTarget extends CRM_Autorelationship_TargetInterfa
     return $cities;
   }
   
-  public function deleteTarget($entityId, $targetContactId) {
+  protected function deleteTargetEntity($entityId, $targetContactId) {
     $sql = "DELETE FROM `civicrm_autorelationship_contact_city` WHERE `id` = %2 AND `contact_id` = %1";
     $dao = CRM_Core_DAO::executeQuery($sql, array(
         '1' => array($targetContactId, 'Integer'),

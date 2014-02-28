@@ -56,6 +56,23 @@
       <custom_group_name>automatic_relationship</custom_group_name>
     </CustomField>
     <CustomField>
+      <name>target_rule_entity</name>
+      <label>Target Rule Entity</label>
+      <data_type>String</data_type>
+      <html_type>Text</html_type>
+      <is_required>0</is_required>
+      <is_searchable>0</is_searchable>
+      <is_search_range>0</is_search_range>
+      <weight>1</weight>
+      <is_active>1</is_active>
+      <is_view>1</is_view>
+      <text_length>255</text_length>
+      <note_columns>60</note_columns>
+      <note_rows>4</note_rows>
+      <column_name>target_rule_entity_14</column_name>
+      <custom_group_name>automatic_relationship</custom_group_name>
+    </CustomField>
+    <CustomField>
       <name>Address_ID</name>
       <label>Address ID</label>
       <data_type>Int</data_type>

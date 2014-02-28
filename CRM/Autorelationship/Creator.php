@@ -31,17 +31,24 @@ class CRM_Autorelationship_Creator {
    */
   public function matchAndCreate() {
     //do the matching
-    $target_contact_ids = $this->matcher->findTargetContactIds();
+    $targets = $this->matcher->findTargetContactIds();
+    $target_contact_ids = array();
+    foreach($targets as $target) {
+      $target_contact_ids[] = $target['contact_id'];
+    }
     $contact_id = $this->matcher->getContactId();
     
     $this->endOldRelationships($contact_id, $target_contact_ids, $this->relationship_type_id);
-    foreach($target_contact_ids as $target_contact_id) {
+    foreach($targets as $target) {
+      $target_contact_id = $target['contact_id']; 
+      $entity = $target['entity'];
+      $entity_id = $target['entity_id'];
            
       /* check if a relationship exist */
-      $existingId = $this->getExtistingRelationshipId($contact_id, $target_contact_id, $this->relationship_type_id);
+      $existingId = $this->getExtistingRelationshipId($target, $target_contact_id, $this->relationship_type_id);
       
       if ($existingId === false) {
-        $this->createNewRelationship($contact_id, $target_contact_id, $this->relationship_type_id);
+        $this->createNewRelationship($target, $target_contact_id, $this->relationship_type_id);
       } else {
         //relationship exist
         // Update it so it becomes active again
@@ -70,14 +77,14 @@ class CRM_Autorelationship_Creator {
    * retruns the id of an existing active relationship
    * returns false when none exist
    * 
-   * @param int $objAddress
+   * @param array $target = array ( 'contact_id' => id, 'entity_id' => int, 'entity' => string)
    * @param int $target_contact_id
    * @param int $relationship_type_id
    */
-  protected function getExtistingRelationshipId($contact_id, $target_contact_id, $relationship_type_id) {    
+  protected function getExtistingRelationshipId($target, $target_contact_id, $relationship_type_id) {    
     $id = false;
     
-    $params['contact_id_a'] = $contact_id;
+    $params['contact_id_a'] = $target['contact_id'];
     $params['contact_id_b'] = $target_contact_id;
     $params['relationship_type_id'] = $relationship_type_id;
     
@@ -137,17 +144,17 @@ class CRM_Autorelationship_Creator {
   
   /**
    * 
-   * @param int $contact_id - The address which is used as a base for matching
+   * @param array $target = array ( 'contact_id' => id, 'entity_id' => int, 'entity' => string)
    * @param int $target_contact_id The target contact for the relationship
    * @param int $relationship_type_id the id of the relationship type to create
    */
-  protected function createNewRelationship($contact_id, $target_contact_id, $relationship_type_id) {
-    $relationship_params['contact_id_a'] = $contact_id;
+  protected function createNewRelationship($target, $target_contact_id, $relationship_type_id) {
+    $relationship_params['contact_id_a'] = $target['contact_id'];
     $relationship_params['contact_id_b'] = $target_contact_id;
     $relationship_params['relationship_type_id'] = $relationship_type_id;
     $relationship_params['start_date'] = date('YmdHis');
     
-    $this->matcher->updateRelationshipParameters($relationship_params);
+    $this->matcher->updateRelationshipParameters($relationship_params, $target);
     
     try {
       civicrm_api3('Relationship', 'Create', $relationship_params);
