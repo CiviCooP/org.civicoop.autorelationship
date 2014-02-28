@@ -29,7 +29,7 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
   public function __construct($objAddress=null) {
     $this->objAddress = $objAddress;
     
-    $this->autogroup_id = $this->getCustomGroupIdByName('Automatic_Relationship');
+    $this->autogroup_id = $this->getCustomGroupIdByName('autorelationship_city_based');
     $this->addressfield_id = $this->getCustomFieldIdByNameAndGroup('Address_ID', $this->autogroup_id);
   }
   

@@ -57,6 +57,9 @@ class CRM_Autorelationship_Upgrader extends CRM_Autorelationship_Upgrader_Base {
 			$params['label_b_a'] = $label_b_a;
       
       $ids = array();
+      if (isset($params['id'])) {
+        $ids['relationshipType'] = CRM_Utils_Array::value('id', $params);
+      }
       $relationType = CRM_Contact_BAO_RelationshipType::add($params, $ids);
       
       //civicrm_api3('RelationshipType', 'Create', $params);
