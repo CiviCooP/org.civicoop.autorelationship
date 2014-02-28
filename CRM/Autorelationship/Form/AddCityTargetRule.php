@@ -20,9 +20,13 @@ class CRM_Autorelationship_Form_AddCityTargetRule extends CRM_Autorelationship_F
     
     $this->addButtons(array(
       array(
-        'type' => 'submit',
-        'name' => ts('Submit'),
+        'type' => 'done',
+        'name' => ts('Save'),
         'isDefault' => TRUE,
+      ),
+      array(
+        'type' => 'cancel',
+        'name' => ts('Cancel'),
       ),
     ));
 

@@ -53,6 +53,9 @@ class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
    * @access protected
    */
   protected function listAction() {
+    
+    $this->setUserContext();
+    
     $factory = CRM_Autorelationship_TargetFactory::singleton();
 
     $entities = $factory->getEntityList($this->_contactId);
@@ -74,7 +77,8 @@ class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
     $session = CRM_Core_Session::singleton();
     $session->setStatus(ts("Automatic relationship rule removed."), ts("Delete"), 'success');
     
-    $this->redirectToTab();
+    $redirectUrl = $session->popUserContext();
+    CRM_Utils_System::redirect($redirectUrl);
   }
   
   protected function addAction() {
@@ -83,14 +87,6 @@ class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
     $url = $interface->getAddFormUrl();
     $q = 'cid='.$this->_contactId;
     $q .= '&entity='.$this->_entity_type;
-    
-    $redirectUrl = CRM_Utils_System::url($url, $q, TRUE);
-    CRM_Utils_System::redirect($redirectUrl);
-  }
-  
-  protected function redirectToTab() {
-    $url = 'civicrm/contact/view';
-    $q = 'action=browse&reset=1&selectedChild=autorelationship_targetrules&cid='.$this->_contactId;
     
     $redirectUrl = CRM_Utils_System::url($url, $q, TRUE);
     CRM_Utils_System::redirect($redirectUrl);
@@ -116,6 +112,15 @@ class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
       $this->_action = 'add';
       $this->_entity_type = CRM_Utils_Request::retrieve('entity', 'String', $this, TRUE);
     }
+  }
+  
+  /**
+   * Sets the context to the user tab TargetRules
+   */
+  protected function setUserContext() {
+    $session = CRM_Core_Session::singleton();
+    $userContext = CRM_Utils_System::url('civicrm/contact/view', 'cid='.$this->_contactId.'&selectedChild=autorelationship_targetrules&reset=1');
+    $session->pushUserContext($userContext);
   }
 
 }
