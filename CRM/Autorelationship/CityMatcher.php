@@ -46,9 +46,16 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
   }
   
   /**
-   * Returns an array with the contact IDs which should have a relationship to the contact owner of the address
+   * Returns an array with the contact IDs which should have a relationship to the contact based on the rule settings
+   * array is build as follows:
+   * [] = array (
+   *  'contactId' => $contactId,
+   *  'entity_id' => //Id of the target rule entity in the database
+   *  'entity' => //System name of the entity
+   * )
    * 
-   * @param object $objAddress
+   * The 'entity_id' is the id of the rule in the database
+   * 
    * @return array
    */
   public function findTargetContactIds() {
@@ -79,6 +86,52 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
     }
     
     return array_unique($return);
+  }
+  
+  /**
+   * Returns an array with all the contacts which should have a relationship based on the tule rule $entity_id
+   * array is build as follows:
+   * [] = array (
+   *  'contactId' => $contactId //the source contactId 
+   *  'entity_id' => //Id of the target rule entity in the database
+   *  'entity' => //System name of the entity
+   * )
+   * 
+   * @param $entity_id the ID of the rule in the database
+   * @return array
+   */
+  public function findSourceContactIds($entity_id) {
+    //retrieve the city value of the rule
+    $sql = "SELECT * FROM `civicrm_autorelationship_contact_city` WHERE `id` = %1";
+    $dao = CRM_Core_DAO::executeQuery($sql, array('1' => array($entity_id, 'Integer')));
+    $city = false;
+    if ($dao->fetch()) {
+      $city = $dao->city;
+    }
+    
+    //find all matching addresses with the city parameter
+    $return = array();
+    if ($city !== false) {  
+      // find all primary addresses which city matches our city
+      $sql = "SELECT * FROM `civicrm_address` WHERE `is_primary` = '1' AND LOWER(`city`) = LOWER(%1)";
+      $dao = CRM_Core_DAO::executeQuery($sql, array(
+        '1' => array($city, 'String')
+      ));
+      
+      while($dao->fetch()) {
+        $target['contact_id'] = $dao->contact_id;
+        $target['entity_id'] = $entity_id;
+        $target['entity'] = $this->interface->getEntitySystemName();
+        
+        $dataArray = $dao->toArray();
+        $dataObject = json_decode(json_encode($dataArray), FALSE); //we need an object for the target data parameter
+        
+        $target['data']['address'] = $dataObject;
+      
+        $return[] = $target;
+      }
+    }
+    return $return;
   }
   
   /**

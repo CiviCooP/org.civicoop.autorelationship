@@ -17,14 +17,18 @@ abstract class CRM_Autorelationship_Form_AddTargetRule extends CRM_Core_Form {
   
   protected $targetInterface;
   
+  protected $entity;
+  
+  protected $new_entity_id;
+  
   function preProcess() {
     $factory = CRM_Autorelationship_TargetFactory::singleton();
     $this->targetContactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
-    $entity = CRM_Utils_Request::retrieve('entity', 'String', $this, TRUE);
-    $this->targetInterface = $factory->getInterfaceForEntity($entity);
+    $this->entity = CRM_Utils_Request::retrieve('entity', 'String', $this, TRUE);
+    $this->targetInterface = $factory->getInterfaceForEntity($this->entity);
     
     $this->add('hidden', 'cid', $this->targetContactId);
-    $this->add('hidden', 'entity', $entity);
+    $this->add('hidden', 'entity', $this->entity);
     
     $this->targetContact = civicrm_api3('Contact', 'getsingle', array('id' => $this->targetContactId));
     $this->assign('contact', $this->targetContact);
@@ -57,6 +61,24 @@ abstract class CRM_Autorelationship_Form_AddTargetRule extends CRM_Core_Form {
       }
     }
     return $elementNames;
+  }
+  
+  public function postProcess() {
+    parent::postProcess();
+    
+    if ($this->new_entity_id) {
+      $this->onAddTargetRule($this->new_entity_id);
+    }
+  }
+  
+  /**
+   * Function to be executed after a new target rule has be added to the system
+   * 
+   * @param int $entityId
+   */
+  protected function onAddTargetRule($entityId) {
+    $matcher = $this->targetInterface->getMatcher();
+    $matcher->matchAndCreateForTargetContactAndEntityId($this->targetContactId, $entityId);
   }
   
 }

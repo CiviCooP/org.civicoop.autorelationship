@@ -53,7 +53,12 @@ class CRM_Autorelationship_Form_AddCityTargetRule extends CRM_Autorelationship_F
       $dao = CRM_Core_DAO::executeQuery($sql, array(
         '1' => array($city, 'String'),
         '2' => array($this->targetContactId, 'Integer')
-      ));
+        ),
+        TRUE,
+        'CRM_Autorelationship_DAO'
+      );
+      
+      $this->new_entity_id = $dao->getInsterId();
     }
     
     parent::postProcess();

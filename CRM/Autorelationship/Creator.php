@@ -28,8 +28,9 @@ class CRM_Autorelationship_Creator {
   /**
    * Matches target contact ID's and updates, end or creates the relationships
    * 
+   * @param int $source_contact_id ID of the source contact
    */
-  public function matchAndCreate() {
+  public function matchAndCreateForSourceContact($source_contact_id) {
     //do the matching
     $targets = $this->matcher->findTargetContactIds();
     
@@ -37,7 +38,7 @@ class CRM_Autorelationship_Creator {
     foreach($targets as $target) {
       $target_contact_ids[] = $target['contact_id'];
     }
-    $contact_id = $this->matcher->getContactId();
+    $contact_id = $source_contact_id;
     
     $this->endOldRelationships($contact_id, $target_contact_ids, $this->relationship_type_id);
     foreach($targets as $target) {
@@ -57,6 +58,36 @@ class CRM_Autorelationship_Creator {
   }
   
   /**
+   * Matches source contact ID's and or creates the relationships for the target contact and rule id
+   * 
+   * @param int $target_contact_id ID of the source contact
+   * @param int $entityId ID of the rule to match
+   */
+  public function matchAndCreateForTargetContactAndEntityId($target_contact_id, $entityId) {
+    //do the matching
+    $source_contacts = $this->matcher->findSourceContactIds($entityId);
+    //var_dump($$source_contacts); exit();
+    foreach($source_contacts as $source) {
+      $source_contact_id = $source['contact_id']; 
+      $this->matcher->setData($source['data']);
+      
+      $target = $source;
+      $target['contact_id'] = $target_contact_id;
+      
+      /* check if a relationship exist */
+      $existingId = $this->getExtistingRelationshipId($target, $source_contact_id, $this->relationship_type_id);
+      
+      if ($existingId === false) {
+        $this->createNewRelationship($target, $source_contact_id, $this->relationship_type_id);
+      } else {
+        //relationship exist
+        // Update it so it becomes active again
+        $this->updateRelationship($existingId, $target_contact_id);
+      }
+    }
+  }
+  
+  /**
    * Update an existing relationship so it becomes active again.
    * 
    * @param int $existingId
@@ -67,6 +98,9 @@ class CRM_Autorelationship_Creator {
       $params['is_active'] = '1';
       try {
         civicrm_api3('Relationship', 'create', $params);
+        
+        $session = CRM_Core_Session::singleton();
+        $session->setStatus(ts('Succesfully updated relationship'), '', 'info');
       } catch (Exception $ex) {
           //do nothing on error
       }
@@ -135,6 +169,9 @@ class CRM_Autorelationship_Creator {
         $endParams['id'] = $relationship['id'];
         $endParams['end_date'] = $endDate->format('YmdHis'); //set end date for this relationship, so that it will be ended
         civicrm_api3('Relationship', 'Create', $endParams);
+        
+        $session = CRM_Core_Session::singleton();
+        $session->setStatus(ts('Relationship ended'), '', 'info');
       }
     }
     
@@ -157,6 +194,9 @@ class CRM_Autorelationship_Creator {
     
     try {
       civicrm_api3('Relationship', 'Create', $relationship_params);
+      
+      $session = CRM_Core_Session::singleton();
+      $session->setStatus(ts('Created a new relationship'), '', 'info');
     } catch (Exception $e) {
       //do nothing on error. 
       Throw $e; //@Todo remove this statement

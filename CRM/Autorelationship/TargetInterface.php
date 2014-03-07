@@ -37,7 +37,6 @@ abstract class CRM_Autorelationship_TargetInterface {
     $matcher->onDeleteTargetRule($entityId,$this->getEntitySystemName(), $targetContactId);
   }
   
-  
   /**
    * Returns an array (list) of entities for a specific target contact
    * 
