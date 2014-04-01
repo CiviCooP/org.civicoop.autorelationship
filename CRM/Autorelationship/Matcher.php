@@ -182,9 +182,9 @@ abstract class CRM_Autorelationship_Matcher {
    * @param string $name
    * @return int
    */
-  protected function getCustomGroupIdByName($name) {
+  protected function getCustomGroupIdByName($name, $extends = 'Relationship') {
     $params['name'] = $name;
-    $params['extends'] = 'Relationship';
+    $params['extends'] = $extends;
     $result = civicrm_api3('CustomGroup', 'getsingle', $params);
     return $result['id'];
   }
@@ -209,9 +209,9 @@ abstract class CRM_Autorelationship_Matcher {
    * @param string $name
    * @return int
    */
-  protected function getCustomGroupByName($name) {
+  protected function getCustomGroupByName($name, $extends = 'Relationship') {
     $params['name'] = $name;
-    $params['extends'] = 'Relationship';
+    $params['extends'] = $extends;
     $result = civicrm_api3('CustomGroup', 'getsingle', $params);
     return $result;
   }
