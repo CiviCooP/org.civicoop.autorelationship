@@ -204,6 +204,33 @@ abstract class CRM_Autorelationship_Matcher {
   }
   
   /**
+   * Returns the settings of a custom group, only relationship groups are checked
+   * 
+   * @param string $name
+   * @return int
+   */
+  protected function getCustomGroupByName($name) {
+    $params['name'] = $name;
+    $params['extends'] = 'Relationship';
+    $result = civicrm_api3('CustomGroup', 'getsingle', $params);
+    return $result;
+  }
+
+  /**
+   * Returns the settings of a custom field retrieved by its name and group_id
+   * 
+   * @param String $name
+   * @param int $group_id
+   * @return int
+   */
+  protected function getCustomFieldByNameAndGroup($name, $group_id) {
+    $params['custom_group_id'] = $group_id;
+    $params['name'] = $name;
+    $result = civicrm_api3('CustomField', 'getsingle', $params);
+    return $result;
+  }
+  
+  /**
    * Matches target contact ID's and updates, end or creates the relationships
    * 
    */
