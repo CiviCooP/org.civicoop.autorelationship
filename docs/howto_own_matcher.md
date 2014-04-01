@@ -7,17 +7,17 @@ To create your own matcher you have to follow the steps below
 3. Implement hook `hook_autorelationship_targetinterfaces` 
 4. Implement on your *'source entity*, e.g. Address the post hook so that the targets will be found on a post
 
-## 1. Create a TargetInterface
+### 1. Create a TargetInterface
 
 See the file [CRM_Autorelationship_TargetInterface] (../CRM/Autorelationship/TargetInterface.php) for more information
 
-## 2. Create a Matcher
+### 2. Create a Matcher
 
 See the file [CRM_Autorelationship_Matcher] (../CRM/Autorelationship/Matcher.php) for more information
 
 Your class should extends the class above and implement the abstract methods.
 
-## 3. Implement hook_autorelationship_targetinterfaces
+### 3. Implement hook_autorelationship_targetinterfaces
 
 For example:
     
@@ -25,7 +25,7 @@ For example:
         $interfaces[] = new CRM_Geostelsel_GemeenteTarget();
     }
 
-## Implement the post hook on your entity
+### 4. Implement the post hook on your entity
 
 For example when we want to match on an address field we should implement the post hook for the address field.
 
