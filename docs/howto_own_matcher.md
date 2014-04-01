@@ -21,7 +21,7 @@ Your class should extends the class above and implement the abstract methods.
 
 For example:
     
-   function hook_autorelationship_targetinterfaces(&$interfaces) {
+    function hook_autorelationship_targetinterfaces(&$interfaces) {
         $interfaces[] = new CRM_Geostelsel_GemeenteTarget();
     }
 
