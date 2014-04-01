@@ -6,6 +6,7 @@ To create your own matcher you have to follow the steps below
 2. Create a class which **extends** `CRM_Autorelationship_Matcher`
 3. Implement hook `hook_autorelationship_targetinterfaces` 
 4. Implement on your *'source entity*, e.g. Address the post hook so that the targets will be found on a post
+5. Build the form to add rules on a target
 
 ### 1. Create a TargetInterface
 
@@ -37,3 +38,10 @@ For example when we want to match on an address field we should implement the po
         }
     }
 
+### 5. Build the form to add rules on a target
+
+You can add a form to your matcher. As you don't know how to create a form, take a look at the [civicrm wiki] (http://wiki.civicrm.org/confluence/display/CRMDOC/Create+a+Module+Extension#CreateaModuleExtension-Addabasicwebform)
+
+Add the link to this form to your target interface class.
+
+Your target becomes available in the drop down on the tab for automatic relationships and the user will be redirected to the form above when they select your target.
