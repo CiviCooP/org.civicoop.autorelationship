@@ -24,6 +24,10 @@ requires *CiviCRM*
 
 ### Hooks
 
+Check [Howto build my own matcher](docs/howto_own_matcher.md) for an instruction on how to build your own matcher.
+
+Check [nl.sp.geostelsel](https://github.com/SPnl/nl.sp.geostelsel) for an example of an implemented matcher.
+
 If you want to build your own matcher/target rules you have to implement the following hook
 
 - **hook_autorelationship_targetinterfaces** this hook has one parameter which is the list of *TargetInterfaces*. You should return in the array the instance of your target interface which extends from *CRM_Autorelationshipnl_TargetInterface*
@@ -31,6 +35,4 @@ If you want to build your own matcher/target rules you have to implement the fol
 Future wishes & Todo
 --------------------
 
-For the future it would be handy if this extension becomes more flexibel, in that way that you can configure relationship type with an automatic flag, so one can have more automatic relationships
-
-Also see the [ToDo](TODO.md)
+See the [ToDo](docs/TODO.md)
