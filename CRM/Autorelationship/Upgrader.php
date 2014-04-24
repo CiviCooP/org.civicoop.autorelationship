@@ -18,6 +18,8 @@ class CRM_Autorelationship_Upgrader extends CRM_Autorelationship_Upgrader_Base {
       'is_reserved' => '1',
       'description' => 'Automatische relatie op basis van woonplaats',
     ));
+
+		$this->executeCustomDataFile('xml/customfields.xml');
   }
 
   /**
