@@ -14,7 +14,7 @@ class CRM_Autorelationship_Upgrader extends CRM_Autorelationship_Upgrader_Base {
   public function install() {
     $this->executeSqlFile('sql/install.sql');
     
-    $this->addRelationshipType('city_based', 'Op basis van woonplaats', 'city_based', 'Op basis van woonplaats', array(
+    $this->addRelationshipType('city_based', 'Op basis van woonplaats (A-B)', 'city_based', 'Op basis van woonplaats (B-A)', array(
       'is_reserved' => '1',
       'description' => 'Automatische relatie op basis van woonplaats',
     ));

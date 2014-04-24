@@ -34,7 +34,7 @@ class CRM_Autorelationship_CityMatcher extends CRM_Autorelationship_Matcher {
     $this->addressfield_id = $this->getCustomFieldIdByNameAndGroup('Address_ID', $this->autogroup_id);
   }
   
-  public function getRelationshipTypeNameAB() {
+  protected function getRelationshipTypeNameAB() {
     return 'city_based';
   }
   

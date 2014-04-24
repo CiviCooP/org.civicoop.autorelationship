@@ -21,7 +21,7 @@ class CRM_Autorelationship_Creator {
   
   public function __construct(CRM_Autorelationship_Matcher $matcher) {
     $this->relationship_type_id = $matcher->getRelationshipTypeId();
-    
+
     $this->matcher = $matcher;
   }
   
@@ -189,12 +189,15 @@ class CRM_Autorelationship_Creator {
     $relationship_params['contact_id_a'] = $contact_id;
     $relationship_params['relationship_type_id'] = $relationship_type_id;
     $relationship_params['start_date'] = date('YmdHis');
-    
+
     $this->matcher->updateRelationshipParameters($relationship_params, $target);
-    
+
     try {
-      civicrm_api3('Relationship', 'Create', $relationship_params);
-      
+      $result = civicrm_api3('Relationship', 'Create', $relationship_params);
+
+			//update the custom value's, does are not set from civi because the is_view = 1 and then the API cannot update those
+			$this->updateIsViewCustomValues($result['id'], $relationship_params);
+
       $session = CRM_Core_Session::singleton();
       $session->setStatus(ts('Created a new relationship'), '', 'info');
     } catch (Exception $e) {
@@ -202,5 +205,16 @@ class CRM_Autorelationship_Creator {
       Throw $e; //@Todo remove this statement
     }
   }
+
+	private function updateIsViewCustomValues($entityId, $params) {
+		$cv_params['entityID'] = $entityId;
+		foreach($params as $key => $val) {
+			if (strpos($key, 'custom_') === 0) {
+				$cv_params[$key] = $val;
+			}
+		}	
+		CRM_Core_BAO_CustomValueTable::setValues($cv_params);
+	}
   
 }
+
