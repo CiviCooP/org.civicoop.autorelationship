@@ -31,7 +31,7 @@ Check [nl.sp.geostelsel](https://github.com/SPnl/nl.sp.geostelsel) for an exampl
 If you want to build your own matcher/target rules you have to implement the following hook
 
 - `hook_autorelationship_targetinterfaces` this hook has one parameter which is the list of *TargetInterfaces*. You should return in the array the instance of your target interface which extends from  `CRM_Autorelationshipnl_TargetInterface`
-- `hook_autorelationship_autorelationship_retrieve_available_interfaces` this hook has one parameter which is the contactID. You should return in the array of interface system name as a key and tru or false wether this interface is availeable for this target contact
+- `hook_autorelationship_autorelationship_retrieve_available_interfaces` this hook has one parameter which is the contactID. You should return an array with interface system name as a key and true or false wether this interface is available for this target contact
 
 Future wishes & Todo
 --------------------
