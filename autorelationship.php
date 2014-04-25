@@ -111,11 +111,15 @@ function autorelationship_civicrm_alterSettingsFolders(&$metaDataFolders = NULL)
  * Implementation of hook_civicrm_post
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_post
  */
-function autorelationship_civicrm_post( $op, $objectName, $objectId, &$objectRef ) {
+function autorelationship_civicrm_post($op, $objectName, $objectId, &$objectRef) {
   if ($objectName == 'Address' && $objectRef instanceof CRM_Core_DAO_Address) {
     $factory = CRM_Autorelationship_TargetFactory::singleton();
-    $matcher = $factory->getMatcherForEntity('city', array('address' => $objectRef));
-    $matcher->matchAndCreateForSourceContact();
+    try {
+      $matcher = $factory->getMatcherForEntity('city', array('address' => $objectRef));
+      $matcher->matchAndCreateForSourceContact();
+    } catch (CRM_Autorelationship_Exception_MatcherNotFound $e) {
+      //do nothing on error Matcher not found
+    }
   }
 }
 
@@ -123,21 +127,29 @@ function autorelationship_civicrm_post( $op, $objectName, $objectId, &$objectRef
  * Implementatio of hook__civicrm_tabs
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_tabs
  */
-
-function autorelationship_civicrm_tabs( &$tabs, $contactID ) { 
+function autorelationship_civicrm_tabs(&$tabs, $contactID) {
+  //check if we should add the tab for this contact
+  //by default auto relationships are disabled
+  $factory = CRM_Autorelationship_TargetFactory::singleton();
+  $enableForContact = false;
+  $available_interfaces = $factory->getTargetInterfacesForContact($contactID);
+  if (is_array($available_interfaces) && count($available_interfaces)) {
+    //there are interfaces available for this contact
+    $enableForContact = true;
+  }
+ 
+  if ($enableForContact) {
     // add a tab with the linked cities
-    $url = CRM_Utils_System::url( 'civicrm/contact/tab/autorelationship_targetrules',
-                                  "cid=$contactID&snippet=1" );
-    
+    $url = CRM_Utils_System::url('civicrm/contact/tab/autorelationship_targetrules', "cid=$contactID&snippet=1");
+
     //Count rules
-    $factory = CRM_Autorelationship_TargetFactory::singleton();
     $count = $factory->getEntityListCount($contactID);
-    
-    $tabs[] = array( 'id'    => 'autorelationship_targetrules',
-                     'url'   => $url,
-                     'count' => $count,
-                     'title' => ts('Automatic relationships'),
-                     'weight' => 300 );
+    $tabs[] = array('id' => 'autorelationship_targetrules',
+      'url' => $url,
+      'count' => $count,
+      'title' => ts('Automatic relationships'),
+      'weight' => 300);
+  }
 }
 
 /**
@@ -146,5 +158,24 @@ function autorelationship_civicrm_tabs( &$tabs, $contactID ) {
  * @param array $interfaces
  */
 function autorelationship_autorelationship_targetinterfaces(&$interfaces) {
-  $interfaces[] = new CRM_Autorelationship_CityTarget();
+  /**
+   * Automatic relationship comes with an example and that is matching on base of the city
+   * This example is disabled by default
+   */
+  //$interfaces[] = new CRM_Autorelationship_CityTarget();
+}
+
+/**
+ * Implementation of hook_autorelationship_retrieve_available_interfaces
+ * 
+ * @param array $interfaces System names of the interfaces available for this contact
+ */
+function autorelationship_autorelationship_retrieve_available_interfaces($contactID) {
+  /**
+   * Automatic relationship comes with an example and that is matching on base of the city
+   * This example is disabled by default
+   */
+  $return = array();
+  $return['city'] = false; //true if you want to enable the city interface
+  return $return;
 }

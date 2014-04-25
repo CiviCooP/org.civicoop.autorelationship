@@ -60,7 +60,7 @@ class CRM_Autorelationship_Page_TargetRules extends CRM_Core_Page {
 
     $entities = $factory->getEntityList($this->_contactId);
     $this->assign('entities', $entities);
-    $this->assign('interfaces', $factory->getTargetInterfaces());
+    $this->assign('interfaces', $factory->getTargetInterfacesForContact($this->_contactId));
   }
 
   /**

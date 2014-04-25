@@ -154,7 +154,7 @@ class CRM_Autorelationship_TargetFactory {
       }
     }
     
-    throw new CRM_Core_Exception('No valid entity type found');
+    throw new CRM_Autorelationship_Exception_MatcherNotFound('No valid entity type found');
   }
   
   /**
@@ -166,5 +166,20 @@ class CRM_Autorelationship_TargetFactory {
     return $this->interfaces;
   }
   
-  
+  public function getTargetInterfacesForContact($contactID) {
+    $hooks = CRM_Utils_Hook::singleton();
+    $enabledInterfaces = $hooks->invoke(1,
+      $contactID, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject, CRM_Utils_Hook::$_nullObject,
+      'autorelationship_retrieve_available_interfaces'
+    );
+    
+    $return = array();
+    foreach($this->interfaces as $interface) {
+      $if_name = $interface->getEntitySystemName();
+      if (!isset($enabledInterfaces[$if_name]) || $enabledInterfaces[$if_name]) {
+        $return[] = $interface;
+      }
+    }
+    return $return;
+  }
 }
