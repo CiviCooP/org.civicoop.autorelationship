@@ -108,6 +108,29 @@ function autorelationship_civicrm_alterSettingsFolders(&$metaDataFolders = NULL)
 }
 
 /**
+ * Delete target rules when a contact is permanently deleted
+ * 
+ * Implementation of hook_civicrm_pre
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_post
+ * 
+ * @param String $op
+ * @param String $objectName
+ * @param int $id
+ * @param array $params
+ */
+function autorelationship_civicrm_pre($op, $objectName, $id, &$params) {
+  if ($op == 'delete' && ($objectName == 'Organization' || $objectName == 'Individual' || $objectName == 'Household')) {
+    $factory = CRM_Autorelationship_TargetFactory::singleton();
+    $entities_sorted = $factory->getEntityList($id);
+    foreach($entities_sorted as $entities) {
+      foreach($entities as $entity) {
+        $factory->deleteEntity($entity['entity'], $entity['entity_id'], $id);
+      }
+    }
+  }
+}
+
+/**
  * Implementation of hook_civicrm_post
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_post
  */
