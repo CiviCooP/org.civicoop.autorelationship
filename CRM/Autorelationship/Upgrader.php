@@ -25,9 +25,12 @@ class CRM_Autorelationship_Upgrader extends CRM_Autorelationship_Upgrader_Base {
   /**
    * Example: Run an external SQL script when the module is uninstalled
    */
-  /*public function uninstall() {
-   $this->executeSqlFile('sql/myuninstall.sql');
-  }*/
+  public function uninstall() {
+    $this->removeCustomGroup('automatic_relationship');
+    $this->removeCustomGroup('autorelationship_city_based');
+    $this->removeRelationshipType('city_based', 'city_based');
+    $this->executeSqlFile('sql/uninstall.sql');
+  }
   
   /**
    * Add an relationship type to CiviCRM
@@ -69,6 +72,24 @@ class CRM_Autorelationship_Upgrader extends CRM_Autorelationship_Upgrader_Base {
     //} catch (Exception $ex) {
     //   return; 
    // }
+  }
+  
+  public function removeRelationshipType($name_a_b, $name_b_a) {
+    $checkParams['name_a_b'] = $name_a_b;
+    $checkParams['name_b_a'] = $name_b_a;
+    $checkResult = civicrm_api3('RelationshipType', 'get', $checkParams);
+    if (isset($checkResult['id']) && $checkResult['id']) {
+      $params['id'] = $checkResult['id'];
+      civicrm_api3('RelationshipType', 'Delete', $params);
+    }
+  }
+  
+  protected function removeCustomGroup($group_name) {
+    $gid = civicrm_api3('CustomGroup', 'getValue', array('return' => 'id', 'name' => $group_name));
+    if ($gid) {
+      civicrm_api3('CustomField', 'delete', array('custom_group_id' => $gid));
+      civicrm_api3('CustomGroup', 'delete', array('id' => $gid));
+    }
   }
 
 

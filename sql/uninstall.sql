@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `civicrm_autorelationship_contact_city`;
