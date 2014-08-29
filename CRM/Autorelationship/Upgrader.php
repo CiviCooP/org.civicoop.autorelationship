@@ -87,7 +87,10 @@ class CRM_Autorelationship_Upgrader extends CRM_Autorelationship_Upgrader_Base {
   protected function removeCustomGroup($group_name) {
     $gid = civicrm_api3('CustomGroup', 'getValue', array('return' => 'id', 'name' => $group_name));
     if ($gid) {
-      civicrm_api3('CustomField', 'delete', array('custom_group_id' => $gid));
+      $fields = civicrm_api3('CustomField', 'get', array('custom_group_id' => $gid));
+      foreach($fields['values'] as $field) {
+        civicrm_api3('CustomField', 'delete', array('id' => $field['id']));
+      }
       civicrm_api3('CustomGroup', 'delete', array('id' => $gid));
     }
   }
